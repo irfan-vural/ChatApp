@@ -1,3 +1,4 @@
+import 'package:comrades/pages/home_page.dart';
 import 'package:comrades/pages/register_page.dart';
 import 'package:comrades/widget/widgets.dart';
 import 'package:flutter/gestures.dart';
@@ -82,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           onPressed: () {
                             login();
+                            nextScreen(context, HomePage());
                           },
                           child: Text(
                             'Login',
