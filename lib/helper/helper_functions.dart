@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HelperFunctions {
   //keys
@@ -38,5 +39,10 @@ class HelperFunctions {
   static Future<String?> getUserNameFromSF() async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getString(userNameKey);
+  }
+
+  static Future<bool> isUserExists(String email) async {
+    var instance = FirebaseFirestore.instance;
+    return (await instance.collection('users').doc(email).get()).exists;
   }
 }

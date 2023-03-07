@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comrades/helper/helper_functions.dart';
 import 'package:comrades/pages/home_page.dart';
 import 'package:comrades/pages/register_page.dart';
 import 'package:comrades/service/auth_service.dart';
@@ -126,8 +127,9 @@ class _LoginPageState extends State<LoginPage> {
               ));
   }
 
-  login() {
-    if (_formKey.currentState!.validate()) {
+  login() async {
+    var isUserExist = await HelperFunctions.isUserExists(email);
+    if (_formKey.currentState!.validate() & isUserExist) {
       setState(() {
         _isLoading = true;
       });
