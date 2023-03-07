@@ -1,0 +1,53 @@
+import 'package:comrades/const/constants.dart';
+import 'package:comrades/pages/home_page.dart';
+import 'package:comrades/pages/login_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import 'firebase_options.dart';
+import 'helper/helper_functions.dart';
+
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isSignedIn = false;
+
+  void getUserLoggedInStatus() async {
+    await HelperFunctions.getUserLoggedInStatus(_isSignedIn).then((value) {
+      if (value != null) {
+        _isSignedIn = value;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserLoggedInStatus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primaryColor: Constants.primarycolor),
+      home: _isSignedIn ? HomePage() : LoginPage(),
+    );
+  }
+}
