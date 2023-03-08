@@ -72,15 +72,16 @@ class _HomePageState extends State<HomePage> {
               },
               icon: const Icon(
                 Icons.search,
-              ))
+              )),
+          SizedBox(
+            width: 15,
+          ),
         ],
         elevation: 0,
-        centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
-          "Groups",
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 27),
+          "Comrades",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       drawer: Drawer(
@@ -181,7 +182,6 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       )),
-      body: groupList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           popUpDialog(context);
@@ -274,68 +274,5 @@ class _HomePageState extends State<HomePage> {
             );
           }));
         });
-  }
-
-  groupList() {
-    return StreamBuilder(
-      stream: groups,
-      builder: (context, AsyncSnapshot snapshot) {
-        // make some checks
-        if (snapshot.hasData) {
-          if (snapshot.data['groups'] != null) {
-            if (snapshot.data['groups'].length != 0) {
-              return ListView.builder(
-                itemCount: snapshot.data['groups'].length,
-                itemBuilder: (context, index) {
-                  int reverseIndex = snapshot.data['groups'].length - index - 1;
-                  return GroupTile(
-                      groupId: getId(snapshot.data['groups'][reverseIndex]),
-                      groupName: getName(snapshot.data['groups'][reverseIndex]),
-                      userName: snapshot.data['fullName']);
-                },
-              );
-            } else {
-              return noGroupWidget();
-            }
-          } else {
-            return noGroupWidget();
-          }
-        } else {
-          return Center(
-            child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColor),
-          );
-        }
-      },
-    );
-  }
-
-  noGroupWidget() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          GestureDetector(
-            onTap: () {
-              popUpDialog(context);
-            },
-            child: Icon(
-              Icons.add_circle,
-              color: Colors.grey[700],
-              size: 75,
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Text(
-            "You've not joined any groups, tap on the add icon to create a group or also search from top search button.",
-            textAlign: TextAlign.center,
-          )
-        ],
-      ),
-    );
   }
 }

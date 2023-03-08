@@ -173,8 +173,8 @@ class _RegisterPageState extends State<RegisterPage> {
         if (value == true) {
           // saving the shared preference state
           await HelperFunctions.saveUserLoggedInStatus(true);
-          await HelperFunctions.saveUserEmailSF(email);
-          await HelperFunctions.saveUserNameSF(fullName);
+          await HelperFunctions.saveUserEmailSF(email.trim());
+          await HelperFunctions.saveUserNameSF(fullName.trim());
           showSnackbar(context, Colors.green, "succesflly registered");
           nextScreen(context, const LoginPage());
         } else {
