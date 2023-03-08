@@ -175,6 +175,7 @@ class _RegisterPageState extends State<RegisterPage> {
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(email);
           await HelperFunctions.saveUserNameSF(fullName);
+          showSnackbar(context, Colors.green, "succesflly registered");
           nextScreen(context, const LoginPage());
         } else {
           showSnackbar(context, Colors.red, value);

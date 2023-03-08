@@ -52,9 +52,12 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: textInputDecoration.copyWith(
                               labelText: "Email",
                               prefixIcon: Icon(Icons.email),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(60),
+                              ),
                             ),
                             onChanged: (value) {
-                              email = value;
+                              email = value.trim();
                             },
                             validator: (val) {
                               return RegExp(
@@ -68,11 +71,13 @@ class _LoginPageState extends State<LoginPage> {
                           TextFormField(
                             obscureText: true,
                             decoration: textInputDecoration.copyWith(
-                              labelText: "Password",
-                              prefixIcon: Icon(Icons.lock),
-                            ),
+                                labelText: "Password",
+                                prefixIcon: Icon(Icons.lock),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(60),
+                                )),
                             onChanged: (value) {
-                              password = value;
+                              password = value.trim();
                               print(password);
                             },
                             validator: (val) {
@@ -128,21 +133,33 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login() async {
-    var isUserExist = await HelperFunctions.isUserExists(email);
-    if (_formKey.currentState!.validate() & isUserExist) {
+    // var isUserExist = await HelperFunctions.isUserExists(email);
+
+    if (_formKey.currentState!.validate()) {
+      //   if (isUserExist == false) {
+      //    showSnackbar(context, Colors.red, "UESR DOES NOT EXIST");
+      //    return;
+      // }
       setState(() {
         _isLoading = true;
       });
       _authService
-          .loginWithUserNameandPassword(email.trim(), password.trim())
+          .loginWithUserNameandPassword(email, password)
           .then((value) async {
         if (value != null) {
           QuerySnapshot snapshot =
               await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
                   .gettingUserData(email);
+
+          HelperFunctions.saveUserLoggedInStatus(true);
           nextScreen(context, HomePage());
         } else {
           showSnackbar(context, Colors.red, value);
+          Future.delayed(Duration(seconds: 2), () {
+            setState(() {
+              _isLoading = false;
+            });
+          });
         }
       });
     }
