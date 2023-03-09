@@ -1,3 +1,4 @@
+import 'package:comrades/const/constants.dart';
 import 'package:comrades/pages/profile_page.dart';
 import 'package:comrades/pages/search_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,9 +7,8 @@ import 'package:flutter/material.dart';
 import '../helper/helper_functions.dart';
 import '../service/auth_service.dart';
 import '../service/database_service.dart';
-import '../widget/group_tile.dart';
 import '../widget/widgets.dart';
-import 'login_page.dart';
+import 'auth/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,15 +31,6 @@ class _HomePageState extends State<HomePage> {
     gettingUserData();
   }
 
-  // string manipulation
-  String getId(String res) {
-    return res.substring(0, res.indexOf("_"));
-  }
-
-  String getName(String res) {
-    return res.substring(res.indexOf("_") + 1);
-  }
-
   gettingUserData() async {
     await HelperFunctions.getUserEmailFromSF().then((value) {
       setState(() {
@@ -59,6 +50,15 @@ class _HomePageState extends State<HomePage> {
         groups = snapshot;
       });
     });
+  }
+
+  // string manipulation
+  String getId(String res) {
+    return res.substring(0, res.indexOf("_"));
+  }
+
+  String getName(String res) {
+    return res.substring(res.indexOf("_") + 1);
   }
 
   @override
@@ -88,10 +88,11 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 50),
         children: <Widget>[
-          Icon(
-            Icons.account_circle,
-            size: 150,
-            color: Colors.grey[700],
+          Container(
+            height: 200,
+            child: CircleAvatar(
+              backgroundImage: Image.network(Constants.src).image,
+            ),
           ),
           const SizedBox(
             height: 15,
@@ -107,16 +108,22 @@ class _HomePageState extends State<HomePage> {
           const Divider(
             height: 2,
           ),
-          ListTile(
-            onTap: () {},
-            selectedColor: Theme.of(context).primaryColor,
-            selected: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.group),
-            title: const Text(
-              "Groups",
-              style: TextStyle(color: Colors.black),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Colors.grey[300],
+            ),
+            child: ListTile(
+              onTap: () {},
+              selectedColor: Theme.of(context).primaryColor,
+              selected: true,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              leading: const Icon(Icons.group),
+              title: const Text(
+                "Groups",
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ),
           ListTile(
@@ -130,7 +137,7 @@ class _HomePageState extends State<HomePage> {
             },
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.group),
+            leading: const Icon(Icons.person),
             title: const Text(
               "Profile",
               style: TextStyle(color: Colors.black),
@@ -139,23 +146,18 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             onTap: () async {
               showDialog(
-                  barrierDismissible: false,
                   context: context,
                   builder: (context) {
                     return AlertDialog(
                       title: const Text("Logout"),
                       content: const Text("Are you sure you want to logout?"),
                       actions: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                          ),
-                        ),
-                        IconButton(
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel')),
+                        TextButton(
                           onPressed: () async {
                             await authService.signOut();
                             Navigator.of(context).pushAndRemoveUntil(
@@ -163,9 +165,9 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => const LoginPage()),
                                 (route) => false);
                           },
-                          icon: const Icon(
-                            Icons.done,
-                            color: Colors.green,
+                          child: const Text(
+                            'Logout',
+                            style: TextStyle(color: Colors.red),
                           ),
                         ),
                       ],
@@ -189,7 +191,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(
-          Icons.add,
+          Icons.message_sharp,
           color: Colors.white,
           size: 30,
         ),
@@ -199,11 +201,12 @@ class _HomePageState extends State<HomePage> {
 
   popUpDialog(BuildContext context) {
     showDialog(
-        barrierDismissible: false,
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: ((context, setState) {
             return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
               title: const Text(
                 "Create a group",
                 textAlign: TextAlign.left,
@@ -245,28 +248,16 @@ class _HomePageState extends State<HomePage> {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                       primary: Theme.of(context).primaryColor),
                   child: const Text("CANCEL"),
                 ),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (groupName != "") {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      DatabaseService(
-                              uid: FirebaseAuth.instance.currentUser!.uid)
-                          .createGroup(userName,
-                              FirebaseAuth.instance.currentUser!.uid, groupName)
-                          .whenComplete(() {
-                        _isLoading = false;
-                      });
-                      Navigator.of(context).pop();
-                      showSnackbar(
-                          context, Colors.green, "Group created successfully.");
-                    }
-                  },
+                  onPressed: () async {},
                   style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                       primary: Theme.of(context).primaryColor),
                   child: const Text("CREATE"),
                 )

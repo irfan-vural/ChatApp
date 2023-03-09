@@ -1,11 +1,13 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HelperFunctions {
   //keys
   static String userLoggedInKey = "LOGGEDINKEY";
   static String userNameKey = "USERNAMEKEY";
   static String userEmailKey = "USEREMAILKEY";
+  static String userProfilePicKey = "USERPROFILEPICKEY";
 
   // saving the data to SF
 
@@ -22,6 +24,11 @@ class HelperFunctions {
   static Future<bool> saveUserEmailSF(String userEmail) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return await sf.setString(userEmailKey, userEmail);
+  }
+
+  static Future<bool> saveUserProfilePicSF(String pp) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setString(userProfilePicKey, pp);
   }
 
   // getting the data from SF

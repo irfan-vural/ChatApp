@@ -1,6 +1,6 @@
 import 'package:comrades/const/constants.dart';
 import 'package:comrades/pages/home_page.dart';
-import 'package:comrades/pages/login_page.dart';
+import 'package:comrades/pages/auth/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

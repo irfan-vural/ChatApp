@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../helper/helper_functions.dart';
-import '../service/auth_service.dart';
-import '../widget/widgets.dart';
+import '../../helper/helper_functions.dart';
+import '../../service/auth_service.dart';
+import '../../widget/widgets.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {

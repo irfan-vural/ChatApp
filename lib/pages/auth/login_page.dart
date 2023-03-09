@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comrades/helper/helper_functions.dart';
 import 'package:comrades/pages/home_page.dart';
-import 'package:comrades/pages/register_page.dart';
+import 'package:comrades/pages/auth/register_page.dart';
 import 'package:comrades/service/auth_service.dart';
 import 'package:comrades/widget/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../const/constants.dart';
-import '../service/database_service.dart';
+import '../../const/constants.dart';
+import '../../service/database_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
