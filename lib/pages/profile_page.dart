@@ -20,8 +20,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   AuthService authService = AuthService();
-  File? _image;
+
   final picker = ImagePicker();
+  File? image;
+  bool isDefaultImage = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,8 +55,9 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 height: 200,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(Constants.src),
-                ),
+                    backgroundImage: isDefaultImage
+                        ? NetworkImage(Constants.src)
+                        : Image.file(image!).image),
               ),
               SizedBox(height: 20),
               Center(
@@ -144,19 +147,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 backgroundImage: NetworkImage(Constants.src),
               ),
             ),
-            TextButton(
-              style: ButtonStyle(
-                  animationDuration: Duration(seconds: 1),
-                  backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      side: BorderSide(color: Colors.green[200]!)))),
-              onPressed: () {},
-              child: const Text(
-                "Change Profile Picture",
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
+            ElevatedButton(
+                onPressed: () => _onClick(), child: Text("Change Profile Pic")),
             SizedBox(height: 40),
             ProfileTile(
                 icon: Icon(Icons.person),
@@ -172,5 +164,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 subtitle: "1234567890"),
           ],
         ));
+  }
+
+  Future _onClick() async {
+    final XFile ximage = picker.pickImage(source: ImageSource.gallery) as XFile;
+
+    setState(() {
+      image = File(ximage.path);
+      isDefaultImage = false;
+    });
   }
 }
