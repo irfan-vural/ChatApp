@@ -23,6 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.amber[50],
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -171,7 +172,6 @@ class _RegisterPageState extends State<RegisterPage> {
               fullName.trim(), email.trim(), password.trim())
           .then((value) async {
         if (value == true) {
-          // saving the shared preference state
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(email.trim());
           await HelperFunctions.saveUserNameSF(fullName.trim());

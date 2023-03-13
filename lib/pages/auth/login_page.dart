@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.amber[50],
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
         ),
@@ -152,6 +153,9 @@ class _LoginPageState extends State<LoginPage> {
                   .gettingUserData(email);
 
           HelperFunctions.saveUserLoggedInStatus(true);
+          HelperFunctions.saveUserEmailSF(email);
+          HelperFunctions.saveUserNameSF(snapshot.docs[0].get("name"));
+
           nextScreen(context, HomePage());
         } else {
           showSnackbar(context, Colors.red, value);

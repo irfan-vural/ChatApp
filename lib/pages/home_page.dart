@@ -1,6 +1,8 @@
 import 'package:comrades/const/constants.dart';
 import 'package:comrades/pages/profile_page.dart';
 import 'package:comrades/pages/search_page.dart';
+import 'package:comrades/widget/drawer_tile.dart';
+import 'package:comrades/widget/group_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -84,107 +86,10 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      drawer: Drawer(
-          child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 50),
-        children: <Widget>[
-          Container(
-            height: 200,
-            child: CircleAvatar(
-              backgroundImage: Image.network(Constants.src).image,
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Text(
-            userName,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          const Divider(
-            height: 2,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.grey[300],
-            ),
-            child: ListTile(
-              onTap: () {},
-              selectedColor: Theme.of(context).primaryColor,
-              selected: true,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              leading: const Icon(Icons.group),
-              title: const Text(
-                "Groups",
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              nextScreen(
-                  context,
-                  ProfilePage(
-                    userName: userName,
-                    email: email,
-                  ));
-            },
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.person),
-            title: const Text(
-              "Profile",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          ListTile(
-            onTap: () async {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Logout"),
-                      content: const Text("Are you sure you want to logout?"),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('Cancel')),
-                        TextButton(
-                          onPressed: () async {
-                            await authService.signOut();
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()),
-                                (route) => false);
-                          },
-                          child: const Text(
-                            'Logout',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      ],
-                    );
-                  });
-            },
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text(
-              "Logout",
-              style: TextStyle(color: Colors.black),
-            ),
-          )
-        ],
-      )),
+      drawer: DrawerTile(userName: userName, email: email),
+      body: listGroups(),
       floatingActionButton: FloatingActionButton(
+        tooltip: "Create a group",
         onPressed: () {
           popUpDialog(context);
         },
@@ -207,7 +112,7 @@ class _HomePageState extends State<HomePage> {
             return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
-              title: const Text(
+              title: Text(
                 "Create a group",
                 textAlign: TextAlign.left,
               ),
@@ -225,20 +130,9 @@ class _HomePageState extends State<HomePage> {
                               groupName = val;
                             });
                           },
-                          style: const TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
-                                  borderRadius: BorderRadius.circular(20)),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide:
-                                      const BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
-                                  borderRadius: BorderRadius.circular(20))),
+                          style: TextStyle(color: Colors.black),
+                          decoration: Constants.popUpInputDecoration
+                              .copyWith(hintText: "Group Name"),
                         ),
                 ],
               ),
@@ -254,7 +148,23 @@ class _HomePageState extends State<HomePage> {
                   child: const Text("CANCEL"),
                 ),
                 ElevatedButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    if (groupName != "") {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await DatabaseService(
+                              uid: FirebaseAuth.instance.currentUser!.uid)
+                          .createGroup(userName,
+                              FirebaseAuth.instance.currentUser!.uid, groupName)
+                          .whenComplete(() {
+                        _isLoading = false;
+                      });
+                      Navigator.of(context).pop();
+                      showSnackbar(
+                          context, Colors.green, "Group created successfully.");
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
@@ -265,5 +175,67 @@ class _HomePageState extends State<HomePage> {
             );
           }));
         });
+  }
+
+  noGroupWidget() {
+    return Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Looks like you don't have any comrade yet",
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Create a cave and invite your friends to join",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 15,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            GestureDetector(
+              onTap: () => popUpDialog(context),
+              child: Icon(
+                Icons.add_circle,
+                color: Theme.of(context).primaryColor,
+                size: 60,
+              ),
+            )
+          ],
+        ));
+  }
+
+  listGroups() {
+    return StreamBuilder(
+        stream: groups,
+        builder: ((context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor),
+            );
+          }
+          return snapshot.hasData && snapshot.data['groups'].length > 0
+              ? ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: snapshot.data['groups'].length,
+                  itemBuilder: ((context, index) {
+                    return GroupTile(
+                        groupId: getId(snapshot.data['groups'][index]),
+                        groupName: getName(snapshot.data['groups'][index]),
+                        userName: snapshot.data['name']);
+                  }))
+              : noGroupWidget();
+        }));
   }
 }

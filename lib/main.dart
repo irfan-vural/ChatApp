@@ -4,6 +4,7 @@ import 'package:comrades/pages/auth/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'firebase_options.dart';
 import 'helper/helper_functions.dart';
@@ -13,6 +14,8 @@ void main(List<String> args) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Hive.initFlutter();
+  await Hive.openBox('settings');
 
   runApp(MyApp());
 }
@@ -46,10 +49,19 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primaryColor: Constants.primarycolor),
-      home: _isSignedIn ? HomePage() : LoginPage(),
+    return ValueListenableBuilder(
+      valueListenable: Hive.box('settings').listenable(),
+      builder: (context, value, child) {
+        final _isDark = value.get('isDark', defaultValue: false);
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: _isDark
+              ? ThemeData.dark()
+              : ThemeData.light()
+                  .copyWith(primaryColor: Constants.primarycolor),
+          home: _isSignedIn ? HomePage() : LoginPage(),
+        );
+      },
     );
   }
 }
