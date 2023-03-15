@@ -5,6 +5,7 @@ import 'package:comrades/widget/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widget/message_tile.dart';
 import 'chat_info.dart';
 
 class ChatPage extends StatefulWidget {
@@ -25,6 +26,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   Stream<QuerySnapshot>? chats;
   String admin = "";
+  TextEditingController messageController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -56,7 +58,7 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0,
-        title: const Text("Chat Page"),
+        title: Text(widget.groupName),
         actions: [
           IconButton(
               onPressed: () {
@@ -71,7 +73,90 @@ class _ChatPageState extends State<ChatPage> {
               icon: Icon(Icons.info)),
         ],
       ),
-      body: Scaffold(),
+      body: Stack(
+        children: <Widget>[
+          // chat messages here
+          chatMessages(),
+          Container(
+            alignment: Alignment.bottomCenter,
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+              width: MediaQuery.of(context).size.width,
+              color: Colors.grey[700],
+              child: Row(children: [
+                Expanded(
+                    child: TextFormField(
+                  controller: messageController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    hintText: "Send a message...",
+                    hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+                    border: InputBorder.none,
+                  ),
+                )),
+                const SizedBox(
+                  width: 12,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    sendMessage();
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Center(
+                        child: Icon(
+                      Icons.send,
+                      color: Colors.white,
+                    )),
+                  ),
+                )
+              ]),
+            ),
+          )
+        ],
+      ),
     );
+  }
+
+  chatMessages() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: chats,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return MessageTile(
+                    sender: snapshot.data!.docs[index]["sender"],
+                    message: snapshot.data!.docs[index]["message"],
+                    sentByme:
+                        widget.userName == snapshot.data!.docs[index]['sender'],
+                  );
+                })
+            : Container();
+      },
+    );
+  }
+
+  sendMessage() {
+    if (messageController.text.isNotEmpty) {
+      Map<String, dynamic> chatMessageMap = {
+        "message": messageController.text,
+        "sender": widget.userName,
+        "time": DateTime.now().millisecondsSinceEpoch,
+      };
+
+      DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .sendMessage(widget.groupId, chatMessageMap);
+      setState(() {
+        messageController.clear();
+      });
+    }
   }
 }
