@@ -18,7 +18,7 @@ class _ProfileTileState extends State<ProfileTile> {
         child: Container(
           margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
           decoration: BoxDecoration(
-            color: Colors.green[200],
+            color: Colors.amber[200],
             borderRadius: BorderRadius.circular(30),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 9),

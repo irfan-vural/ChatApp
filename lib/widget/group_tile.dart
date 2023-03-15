@@ -34,7 +34,7 @@ class _GroupTileState extends State<GroupTile> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
         decoration: BoxDecoration(
-          color: Colors.green[200],
+          color: Colors.amber[300],
           borderRadius: BorderRadius.circular(30),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 9),

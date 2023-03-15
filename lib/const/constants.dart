@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static final primarycolor = Colors.green[900]!;
+  static final primarycolor = Colors.amber[900]!;
   static String src =
       "https://fastly.picsum.photos/id/525/200/300.jpg?hmac=Dhg6JV7Cl1oDtYMG0pq3hVUbGQjEpOX41178aR7_eh8";
 
