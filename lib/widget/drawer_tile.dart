@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:comrades/service/auth_service.dart';
 import 'package:comrades/widget/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import '../const/constants.dart';
 import '../pages/auth/login_page.dart';
@@ -10,7 +11,12 @@ import '../pages/profile_page.dart';
 class DrawerTile extends StatefulWidget {
   final String userName;
   final String email;
-  const DrawerTile({Key? key, required this.userName, required this.email})
+  final File image;
+  const DrawerTile(
+      {Key? key,
+      required this.userName,
+      required this.email,
+      required this.image})
       : super(key: key);
 
   @override
@@ -25,9 +31,9 @@ class _DrawerTileState extends State<DrawerTile> {
       padding: const EdgeInsets.symmetric(vertical: 50),
       children: <Widget>[
         Container(
-          height: 150,
+          height: 200,
           child: CircleAvatar(
-            backgroundImage: Image.network(Constants.src).image,
+            backgroundImage: Image.file(widget.image).image,
           ),
         ),
         const SizedBox(
@@ -66,6 +72,7 @@ class _DrawerTileState extends State<DrawerTile> {
                 ProfilePage(
                   userName: widget.userName,
                   email: widget.email,
+                  image: widget.image,
                 ));
           },
           contentPadding:

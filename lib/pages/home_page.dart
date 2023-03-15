@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:comrades/const/constants.dart';
-import 'package:comrades/pages/profile_page.dart';
 import 'package:comrades/pages/search_page.dart';
 import 'package:comrades/widget/drawer_tile.dart';
 import 'package:comrades/widget/group_tile.dart';
@@ -10,7 +11,6 @@ import '../helper/helper_functions.dart';
 import '../service/auth_service.dart';
 import '../service/database_service.dart';
 import '../widget/widgets.dart';
-import 'auth/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   Stream? groups;
   bool _isLoading = false;
   String groupName = "";
+  File image = File("");
 
   @override
   void initState() {
@@ -50,6 +51,11 @@ class _HomePageState extends State<HomePage> {
         .then((snapshot) {
       setState(() {
         groups = snapshot;
+      });
+    });
+    await HelperFunctions.getUserProfilePicSF().then((value) {
+      setState(() {
+        image = File(value);
       });
     });
   }
@@ -86,7 +92,7 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      drawer: DrawerTile(userName: userName, email: email),
+      drawer: DrawerTile(userName: userName, email: email, image: image),
       body: listGroups(),
       floatingActionButton: FloatingActionButton(
         tooltip: "Create a group",

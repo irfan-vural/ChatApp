@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:comrades/const/constants.dart';
+import 'package:comrades/helper/helper_functions.dart';
 import 'package:comrades/pages/home_page.dart';
 import 'package:comrades/service/auth_service.dart';
 import 'package:comrades/widget/profile_tile.dart';
@@ -11,10 +12,13 @@ import 'package:image_picker/image_picker.dart';
 import 'auth/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({required this.userName, required this.email});
+  ProfilePage(
+      {required this.userName, required this.email, required this.image});
   final String userName;
   final String email;
   @override
+  File? image = File(Constants.src);
+
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
@@ -22,8 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   AuthService authService = AuthService();
 
   final picker = ImagePicker();
-  File? image;
-  bool isDefaultImage = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,9 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 height: 200,
                 child: CircleAvatar(
-                    backgroundImage: isDefaultImage
-                        ? NetworkImage(Constants.src)
-                        : Image.file(image!).image),
+                    backgroundImage: Image.file(widget.image!).image),
               ),
               SizedBox(height: 20),
               Center(
@@ -142,13 +143,20 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 5,
+              height: 200,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(Constants.src),
+                backgroundImage: Image.file(widget.image!).image,
               ),
             ),
             ElevatedButton(
-                onPressed: () => _onClick(), child: Text("Change Profile Pic")),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).primaryColor),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)))),
+                onPressed: () => popUpDialog(context),
+                child: Text("Change Profile Pic")),
             SizedBox(height: 40),
             ProfileTile(
                 icon: Icon(Icons.person),
@@ -166,12 +174,69 @@ class _ProfilePageState extends State<ProfilePage> {
         ));
   }
 
-  Future _onClick() async {
-    final XFile ximage = picker.pickImage(source: ImageSource.gallery) as XFile;
+  Future<File?> _onClick(ImageSource source) async {
+    final XFile? ximage = await picker.pickImage(source: source) as XFile;
+    if (ximage == null) {
+      return null;
+    }
 
     setState(() {
-      image = File(ximage.path);
-      isDefaultImage = false;
+      widget.image = File(ximage.path);
+      HelperFunctions.saveUserProfilePicSF(ximage.path);
     });
+  }
+
+  popUpDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              actionsOverflowButtonSpacing: 12,
+              actionsOverflowDirection: VerticalDirection.down,
+              actionsAlignment: MainAxisAlignment.spaceEvenly,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              title: Text(
+                "Change Profile Pic",
+                textAlign: TextAlign.center,
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      primary: Theme.of(context).primaryColor),
+                  child: const Text("CANCEL"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    _onClick(ImageSource.gallery);
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      primary: Theme.of(context).primaryColor),
+                  child: const Text("CHOOSE FROM GALLERY"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    _onClick(ImageSource.camera);
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      primary: Theme.of(context).primaryColor),
+                  child: const Text("TAKE A PICTURE"),
+                )
+              ],
+            );
+          }));
+        });
   }
 }
