@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../const/constants.dart';
 import '../service/database_service.dart';
 
 class ChatInfoPage extends StatefulWidget {
@@ -44,6 +45,7 @@ class _ChatInfoPageState extends State<ChatInfoPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Constants.secondarycolor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text("Chat Info"),

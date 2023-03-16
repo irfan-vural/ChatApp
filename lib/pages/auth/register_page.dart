@@ -1,3 +1,4 @@
+import 'package:comrades/const/constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber[50],
+      backgroundColor: Constants.secondarycolor,
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(

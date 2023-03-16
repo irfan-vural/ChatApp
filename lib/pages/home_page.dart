@@ -72,6 +72,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Constants.secondarycolor,
       appBar: AppBar(
         actions: [
           IconButton(
