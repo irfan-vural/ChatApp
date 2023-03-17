@@ -4,7 +4,6 @@ import 'package:comrades/widget/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../const/constants.dart';
 import '../widget/message_tile.dart';
 import 'chat_info.dart';
 
@@ -53,7 +52,6 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constants.secondarycolor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0,

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
-  final String uid;
-  DatabaseService({required this.uid});
+  final String? uid;
+  DatabaseService({this.uid});
 
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
@@ -54,6 +54,10 @@ class DatabaseService {
     });
   }
 
+  searchByName(String groupName) {
+    return groupCollection.where("groupName", isEqualTo: groupName).get();
+  }
+
   getChats(String groupId) async {
     return groupCollection
         .doc(groupId)
@@ -79,10 +83,6 @@ class DatabaseService {
       "recentMessageSender": chatMessageData['sender'],
       "recentMessageTime": chatMessageData['time'].toString(),
     });
-  }
-
-  searchByName(String groupName) {
-    return groupCollection.where("groupName", isEqualTo: groupName).get();
   }
 
   // function -> bool

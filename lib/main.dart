@@ -3,7 +3,6 @@ import 'package:comrades/pages/home_page.dart';
 import 'package:comrades/pages/auth/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'firebase_options.dart';

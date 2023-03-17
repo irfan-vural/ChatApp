@@ -30,7 +30,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Constants.secondarycolor,
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: const Text("Profile"),
@@ -54,7 +53,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
         drawer: Drawer(
-          backgroundColor: Constants.secondarycolor,
           child: ListView(
             children: [
               Container(

@@ -45,7 +45,6 @@ class _ChatInfoPageState extends State<ChatInfoPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constants.secondarycolor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text("Chat Info"),
