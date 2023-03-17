@@ -34,6 +34,10 @@ class _SearchPageState extends State<SearchPage> {
     return r.substring(r.indexOf("_") + 1);
   }
 
+  String getId(String r) {
+    return r.substring(0, r.indexOf("_"));
+  }
+
   Future<void> gettingUserData() async {
     await HelperFunctions.getUserNameFromSF().then((val) {
       setState(() {
