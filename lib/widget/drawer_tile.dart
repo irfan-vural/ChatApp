@@ -84,34 +84,7 @@ class _DrawerTileState extends State<DrawerTile> {
         ),
         ListTile(
           onTap: () async {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text("Logout"),
-                    content: const Text("Are you sure you want to logout?"),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text('Cancel')),
-                      TextButton(
-                        onPressed: () async {
-                          await AuthService().signOut();
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const LoginPage()),
-                              (route) => false);
-                        },
-                        child: const Text(
-                          'Logout',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ],
-                  );
-                });
+            showLogoutDialog(context);
           },
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -123,5 +96,36 @@ class _DrawerTileState extends State<DrawerTile> {
         )
       ],
     ));
+  }
+
+  void showLogoutDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Logout"),
+            content: const Text("Are you sure you want to logout?"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancel')),
+              TextButton(
+                onPressed: () async {
+                  await AuthService().signOut();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                      (route) => false);
+                },
+                child: const Text(
+                  'Logout',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

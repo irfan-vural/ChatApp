@@ -104,9 +104,11 @@ class DatabaseService {
       String groupId, String userName, String groupName) async {
     // doc reference
     DocumentReference userDocumentReference = userCollection.doc(uid);
+
     DocumentReference groupDocumentReference = groupCollection.doc(groupId);
 
     DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+
     List<dynamic> groups = await documentSnapshot['groups'];
 
     // if user has our groups -> then remove then or also in other part re join

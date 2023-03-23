@@ -16,7 +16,7 @@ void main(List<String> args) async {
   await Hive.initFlutter();
   await Hive.openBox('settings');
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
