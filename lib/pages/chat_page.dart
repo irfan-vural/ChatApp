@@ -84,6 +84,7 @@ class _ChatPageState extends State<ChatPage> {
               child: Row(children: [
                 Expanded(
                     child: TextFormField(
+                  keyboardType: TextInputType.text,
                   controller: messageController,
                   style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
