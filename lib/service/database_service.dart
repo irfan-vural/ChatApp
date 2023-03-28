@@ -62,7 +62,7 @@ class DatabaseService {
     return groupCollection
         .doc(groupId)
         .collection("messages")
-        .orderBy("time", descending: true)
+        .orderBy("time")
         .snapshots();
   }
 

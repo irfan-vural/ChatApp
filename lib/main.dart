@@ -13,9 +13,11 @@ void main(List<String> args) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Hive.initFlutter();
+  await Hive.openBox('settings');
 
   runApp(const MyApp());
-} 
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
