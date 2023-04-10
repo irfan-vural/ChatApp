@@ -16,14 +16,13 @@ void main(List<String> args) async {
   );
   await Hive.initFlutter();
   await Hive.openBox('settings');
-  
+
   final fcmToken = await FirebaseMessaging.instance.getToken();
 
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-
   const MyApp({super.key});
 
   @override
