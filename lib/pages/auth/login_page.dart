@@ -138,8 +138,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       //   if (isUserExist == false) {
       //    showSnackbar(context, Colors.red, "UESR DOES NOT EXIST");
-      //    return;
-      // }
+      //    return;s
       setState(() {
         _isLoading = true;
       });
