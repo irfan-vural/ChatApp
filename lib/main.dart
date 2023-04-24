@@ -2,7 +2,6 @@ import 'package:comrades/const/constants.dart';
 import 'package:comrades/pages/home_page.dart';
 import 'package:comrades/pages/auth/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -16,8 +15,6 @@ void main(List<String> args) async {
   );
   await Hive.initFlutter();
   await Hive.openBox('settings');
-
-  final fcmToken = await FirebaseMessaging.instance.getToken();
 
   runApp(const MyApp());
 }
