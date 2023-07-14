@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../const/constants.dart';
 import '../service/database_service.dart';
 
 class ChatInfoPage extends StatefulWidget {
@@ -38,7 +37,6 @@ class _ChatInfoPageState extends State<ChatInfoPage> {
     getParticipants();
   }
 
-  @override
   getName(String res) {
     return res.substring(res.indexOf("_") + 1);
   }

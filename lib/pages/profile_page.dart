@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
       {required this.userName, required this.email, required this.image});
   final String userName;
   final String email;
-  @override
+  
   File? image = File(Constants.src);
 
   State<ProfilePage> createState() => _ProfilePageState();
@@ -184,6 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
       widget.image = File(ximage.path);
       HelperFunctions.saveUserProfilePicSF(ximage.path);
     });
+    return null;
   }
 
   popUpDialog(BuildContext context) {
